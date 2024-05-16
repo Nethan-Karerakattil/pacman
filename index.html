@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pacman</title>
+
+    <script src="./src/classes/renderer.js" defer></script>
+    <script src="./src/classes/pacman.js" defer></script>
+    <script src="./src/classes/ghost.js" defer></script>
+    <script src="./src/map.js" defer></script>
+    <script src="./src/main.js" defer></script>
+</head>
+<body>
+    <canvas id="c"></canvas>
+
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #c {
+            border: 1px solid #000;
+            /* image-rendering: pixelated; */
+        }
+    </style>
+</body>
+</html>
