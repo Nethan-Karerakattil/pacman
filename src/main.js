@@ -20,6 +20,18 @@ let clyde = null;
 
 main();
 async function main(){
+    ctx.fillStyle = "#000";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    let font = new FontFace("main_font", "url(fonts/press-start-2p.ttf)");
+    await font.load();
+    document.fonts.add(font);
+    
+    ctx.fillStyle = "#fff";
+    ctx.textAlign = "center";
+    ctx.font = "12px main_font";
+    ctx.fillText("LOADING ASSETS..", canvas.width / 2, canvas.height / 2);
+
     renderer = new Renderer(tilemap, rows, cols);
     pacman = new Pacman(renderer, [13, 23]);
 
@@ -35,10 +47,6 @@ async function main(){
     await pinky.load(pinky_images);
     await inky.load(inky_images);
     await clyde.load(clyde_images);
-
-    let font = new FontFace("main_font", "url(fonts/press-start-2p.ttf)");
-    await font.load();
-    document.fonts.add(font);
 
     /* Events */
     document.addEventListener("keyup", (e) => {
