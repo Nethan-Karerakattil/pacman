@@ -1,9 +1,9 @@
 class Renderer {
-    constructor(width, height){
+    constructor(tilemap, width, height){
         this.width = width;
         this.height = height;
+        this.tilemap = tilemap;
         this.images = [];
-        this.tilemap = [];
     }
 
     async load(image_src_arr){
@@ -31,7 +31,7 @@ class Renderer {
         for(let y = 0; y < this.tilemap.length; y++){
             for(let x = 0; x < this.tilemap[y].length; x++){
                 let image = this.images[this.tilemap[y][x]];
-
+                
                 ctx.drawImage(image, x * cell_width, y * cell_height, cell_width, cell_height);
             }
         }

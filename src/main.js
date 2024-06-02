@@ -10,7 +10,6 @@ let fps = 0;
 canvas.width = rows * scale;
 canvas.height = cols * scale;
 
-let game_pause = false;
 let renderer = null;
 let pacman = null;
 
@@ -19,16 +18,10 @@ let pinky = null;
 let inky = null;
 let clyde = null;
 
-/* Events */
-document.addEventListener("visibilitychange", () => {
-    game_pause = document.hidden ? true : false;
-});
-
-/* Logic */
 main();
 async function main(){
-    renderer = new Renderer(rows, cols);
-    pacman = new Pacman(renderer, []);
+    renderer = new Renderer(tilemap, rows, cols);
+    pacman = new Pacman(renderer, [13, 23]);
 
     blinky = new Ghost("blinky", renderer, [1, 1]);
     pinky = new Ghost("pinky", renderer, [26, 29]);
@@ -36,22 +29,30 @@ async function main(){
     clyde = new Ghost("clyde", renderer, [26, 1]);
     
     await renderer.load(image_src_arr);
-    renderer.tilemap = tilemap;
+    await pacman.load(pacman_images);
 
-    await blinky.load("../images/ghosts/blinky");
-    await pinky.load("../images/ghosts/pinky");
-    await inky.load("../images/ghosts/inky");
-    await clyde.load("../images/ghosts/clyde");
+    await blinky.load(blinky_images);
+    await pinky.load(pinky_images);
+    await inky.load(inky_images);
+    await clyde.load(clyde_images);
 
     let font = new FontFace("main_font", "url(fonts/press-start-2p.ttf)");
     await font.load();
     document.fonts.add(font);
 
+    /* Events */
+    document.addEventListener("keyup", (e) => {
+        if(e.key === "w") pacman.player_dir = "w";
+        else if(e.key === "a") pacman.player_dir = "a";
+        else if(e.key === "s") pacman.player_dir = "s";
+        else if(e.key === "d") pacman.player_dir = "d";
+    });
+
     calc_fps();
     function calc_fps() {
         setTimeout(() => {
             calc_fps();
-            console.log(fps);
+            // console.log(fps);
             fps = 0;
         }, 1000);
     }
@@ -60,10 +61,8 @@ async function main(){
     function loop(){
         setTimeout(() => {
             loop();
-            if(!game_pause){
-                render_loop();
-                fps++;
-            }
+            render_loop();
+            fps++;
         }, 1000 / 60);
     }
 }
@@ -74,8 +73,9 @@ function render_loop() {
 
     renderer.render();
 
-    blinky.render();
-    pinky.render();
-    inky.render();
-    clyde.render();
+    pacman.update();
+    blinky.update();
+    pinky.update();
+    inky.update();
+    clyde.update();
 }
