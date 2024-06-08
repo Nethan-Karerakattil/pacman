@@ -2,10 +2,7 @@ class Entity {
     constructor(renderer, loc){
         this.renderer = renderer;
         this.loc = loc;
-
         this.images = [];
-        this.start_from = structuredClone(this.loc);
-        this.last_updated = Date.now();
         this.timer = 0;
         this.speed = 13;
     }
@@ -46,60 +43,80 @@ class Entity {
 }
 
 class Ghost extends Entity {
-    constructor(type, renderer, loc){
+    constructor(type, renderer, pacman, loc){
         super(renderer, loc);
         this.type = type;
+        this.pacman = pacman;
     }
 
     pathfind() {
+        /* Calculate Valid Directions */
         let dirs = [];
         let next_tile;
 
-        next_tile = this.renderer.tilemap[this.loc[1] + 0][this.loc[0] + 1];
-        if(next_tile === 32 || next_tile === 33 || next_tile === 34) dirs.push([1, 0]);
+        this.loc[0] = Math.round(this.loc[0]);
+        this.loc[1] = Math.round(this.loc[1]);
 
-        next_tile = this.renderer.tilemap[this.loc[1] + 1][this.loc[0] + 0];
-        if(next_tile === 32 || next_tile === 33 || next_tile === 34) dirs.push([0, 1]);
-
-        next_tile = this.renderer.tilemap[this.loc[1] + 0][this.loc[0] - 1];
-        if(next_tile === 32 || next_tile === 33 || next_tile === 34) dirs.push([-1, 0]);
-
-        next_tile = this.renderer.tilemap[this.loc[1] - 1][this.loc[0] + 0];
-        if(next_tile === 32 || next_tile === 33 || next_tile === 34) dirs.push([0, -1]);
-
-        for(let i = 0; i < dirs.length; i++){
-            let dir = [this.loc[0] + dirs[i][0], this.loc[1] + dirs[i][1]];
-            if(dir.toString() === this.start_from.toString()) dirs.splice(i, 1);
+        let prev_loc = [0, 0];
+        if(this.movement){
+            prev_loc[0] = this.loc[0] - Math.round(this.movement[0] * this.speed);
+            prev_loc[1] = this.loc[1] - Math.round(this.movement[1] * this.speed);
         }
 
-        this.start_from = structuredClone(this.loc);
+        next_tile = this.renderer.tilemap[this.loc[1]][this.loc[0] + 1];
+        if(
+            (next_tile === 32 || next_tile === 33 || next_tile === 34) &&
+            (prev_loc[0] !== this.loc[0] + 1 || prev_loc[1] !== this.loc[1])
+        ) dirs.push([1, 0]);
+        
+
+        next_tile = this.renderer.tilemap[this.loc[1] + 1][this.loc[0]];
+        if(
+            (next_tile === 32 || next_tile === 33 || next_tile === 34) &&
+            (prev_loc[0] !== this.loc[0] || prev_loc[1] !== this.loc[1] + 1)
+        ) dirs.push([0, 1]);
+
+        next_tile = this.renderer.tilemap[this.loc[1]][this.loc[0] - 1];
+        if(
+            (next_tile === 32 || next_tile === 33 || next_tile === 34) &&
+            (prev_loc[0] !== this.loc[0] - 1 || prev_loc[1] !== this.loc[1])
+        ) dirs.push([-1, 0]);
+
+        next_tile = this.renderer.tilemap[this.loc[1] - 1][this.loc[0]];
+        if(
+            (next_tile === 32 || next_tile === 33 || next_tile === 34) &&
+            (prev_loc[0] !== this.loc[0] || prev_loc[1] !== this.loc[1] - 1)
+        ) dirs.push([0, -1]);
+
+        /* Choose Random Direction */
         let rng = Math.floor(Math.random() * dirs.length);
 
-        this.move_to = structuredClone(this.loc);
-        this.move_to[0] += dirs[rng][0];
-        this.move_to[1] += dirs[rng][1];
+        let move_to = [
+            this.loc[0] + dirs[rng][0],
+            this.loc[1] + dirs[rng][1]
+        ];
+
+        this.movement = [
+            (move_to[0] - this.loc[0]) / this.speed,
+            (move_to[1] - this.loc[1]) / this.speed
+        ];
     }
 
     update(){
-        if(this.timer === this.speed || !this.move_to){
+        if(this.timer === this.speed || !this.movement){
             this.loc = structuredClone(this.move_to ? this.move_to : this.loc);
             this.timer = 0;
 
             this.pathfind();
         }
 
-        let movement = [
-            (this.move_to[0] - this.start_from[0]) / this.speed,
-            (this.move_to[1] - this.start_from[1]) / this.speed
-        ];
-
         let active_sprite = (this.timer < this.speed / 2) ? 1 : 0;
-        if(movement[0] < 0) active_sprite += 2;
-        if(movement[0] > 0) active_sprite += 4;
-        if(movement[1] < 0) active_sprite += 6;
+        if(this.movement[0] < 0) active_sprite += 2;
+        if(this.movement[0] > 0) active_sprite += 4;
+        if(this.movement[1] < 0) active_sprite += 6;
         
-        this.loc[0] += movement[0];
-        this.loc[1] += movement[1];
+        this.loc[0] += this.movement[0];
+        this.loc[1] += this.movement[1];
         this.timer++;
 
         this.render(active_sprite);

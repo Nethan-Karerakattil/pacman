@@ -30,15 +30,15 @@ async function main(){
     ctx.fillStyle = "#fff";
     ctx.textAlign = "center";
     ctx.font = "12px main_font";
-    ctx.fillText("LOADING ASSETS..", canvas.width / 2, canvas.height / 2);
+    ctx.fillText("LOADING ASSETS...", canvas.width / 2, canvas.height / 2);
 
     renderer = new Renderer(tilemap, rows, cols);
     pacman = new Pacman(renderer, [13, 23]);
 
-    blinky = new Ghost("blinky", renderer, [1, 1]);
-    pinky = new Ghost("pinky", renderer, [26, 29]);
-    inky = new Ghost("inky", renderer, [1, 29]);
-    clyde = new Ghost("clyde", renderer, [26, 1]);
+    blinky = new Ghost("blinky", renderer, pacman, [1, 1]);
+    pinky = new Ghost("pinky", renderer, pacman, [26, 29]);
+    inky = new Ghost("inky", renderer, pacman, [1, 29]);
+    clyde = new Ghost("clyde", renderer, pacman, [26, 1]);
     
     await renderer.load(image_src_arr);
     await pacman.load(pacman_images);
@@ -70,7 +70,7 @@ async function main(){
         setTimeout(() => {
             loop();
             render_loop();
-            fps++;
+            fps++;  
         }, 1000 / 60);
     }
 }
