@@ -32,29 +32,28 @@ async function main(){
     ctx.font = "12px main_font";
     ctx.fillText("LOADING ASSETS...", canvas.width / 2, canvas.height / 2);
 
-    renderer = new Renderer(tilemap, rows, cols);
-    pacman = new Pacman(renderer, [13, 23]);
+    renderer = new Renderer(rows, cols, tilemap, wall_sprites);
+    // pacman = new Pacman(renderer, [13, 23]);
 
-    blinky = new Ghost("blinky", renderer, pacman, [1, 1]);
-    pinky = new Ghost("pinky", renderer, pacman, [26, 29]);
-    inky = new Ghost("inky", renderer, pacman, [1, 29]);
-    clyde = new Ghost("clyde", renderer, pacman, [26, 1]);
+    // blinky = new Ghost("blinky", renderer, pacman, [1, 1]);
+    // pinky = new Ghost("pinky", renderer, pacman, [26, 29]);
+    // inky = new Ghost("inky", renderer, pacman, [1, 29]);
+    // clyde = new Ghost("clyde", renderer, pacman, [26, 1]);
     
-    await renderer.load(image_src_arr);
-    await pacman.load(pacman_images);
+    // await pacman.load(pacman_images);
 
-    await blinky.load(blinky_images);
-    await pinky.load(pinky_images);
-    await inky.load(inky_images);
-    await clyde.load(clyde_images);
+    // await blinky.load(blinky_images);
+    // await pinky.load(pinky_images);
+    // await inky.load(inky_images);
+    // await clyde.load(clyde_images);
 
-    /* Events */
-    document.addEventListener("keyup", (e) => {
-        if(e.key === "w") pacman.player_dir = "w";
-        else if(e.key === "a") pacman.player_dir = "a";
-        else if(e.key === "s") pacman.player_dir = "s";
-        else if(e.key === "d") pacman.player_dir = "d";
-    });
+    // /* Events */
+    // document.addEventListener("keyup", (e) => {
+    //     if(e.key === "w") pacman.player_dir = "w";
+    //     else if(e.key === "a") pacman.player_dir = "a";
+    //     else if(e.key === "s") pacman.player_dir = "s";
+    //     else if(e.key === "d") pacman.player_dir = "d";
+    // });
 
     calc_fps();
     function calc_fps() {
@@ -81,9 +80,9 @@ function render_loop() {
 
     renderer.render();
 
-    pacman.update();
-    blinky.update();
-    pinky.update();
-    inky.update();
-    clyde.update();
+    // pacman.update();
+    // blinky.update();
+    // pinky.update();
+    // inky.update();
+    // clyde.update();
 }
