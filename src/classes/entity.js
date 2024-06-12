@@ -1,52 +1,33 @@
 class Entity {
-    constructor(renderer, loc){
+    constructor(renderer, spritesheet, loc){
         this.renderer = renderer;
+        this.spritesheet = spritesheet;
         this.loc = loc;
-        this.images = [];
         this.timer = 0;
         this.speed = 13;
     }
 
-    async load(image_src_arr) {
-        for(let i = 0; i < image_src_arr.length; i++){
-            let image = new Image();
-
-            try {
-                await new Promise((resolve, reject) => {
-                    image.src = image_src_arr[i];
-                    image.onload = () => resolve();
-                    image.onerror = () => reject("Error while processing image");
-                });
-            } catch(err) {
-                console.error(err);
-            }
-        
-            this.images.push(image);
-        }
-    }
-
-    render(active_sprite){
-        let cell_width = 16;
-        let cell_height = 16;
+    render(active_sprite, sprite_size){
         let ghost_scale = 1.5;
-        
-        let width = cell_width * ghost_scale;
-        let height = cell_height * ghost_scale;
+        let size = sprite_size * ghost_scale;
 
         ctx.drawImage(
-            this.images[active_sprite],
-            this.loc[0] * cell_width - (cell_width / 4),
-            this.loc[1] * cell_height - (cell_height / 4),
-            width, height
+            this.spritesheet,
+            active_sprite * sprite_size, 0,
+            sprite_size, sprite_size,
+            this.loc[0] * 16 - (16 / 4),
+            this.loc[1] * 16 - (16 / 4),
+            24, 24
         );
     }
 }
 
 class Ghost extends Entity {
-    constructor(type, renderer, pacman, loc){
-        super(renderer, loc);
+    constructor(type, renderer, pacman, spritesheet, loc){
+        super(renderer, spritesheet, loc);
         this.type = type;
         this.pacman = pacman;
+        this.speed = 9;
     }
 
     pathfind() {
@@ -111,6 +92,10 @@ class Ghost extends Entity {
         }
 
         let active_sprite = (this.timer < this.speed / 2) ? 1 : 0;
+        if(this.type === "blinky") active_sprite += 8;
+        if(this.type === "pinky") active_sprite += 24;
+        if(this.type === "inky") active_sprite += 16;
+        
         if(this.movement[0] < 0) active_sprite += 2;
         if(this.movement[0] > 0) active_sprite += 4;
         if(this.movement[1] < 0) active_sprite += 6;
@@ -119,16 +104,16 @@ class Ghost extends Entity {
         this.loc[1] += this.movement[1];
         this.timer++;
 
-        this.render(active_sprite);
+        this.render(active_sprite, 16);
     }
 }
 
 class Pacman extends Entity {
-    constructor(renderer, loc){
-        super(renderer, loc);
+    constructor(renderer, spritesheet, loc){
+        super(renderer, spritesheet, loc);
         this.player_dir = "a";
         this.dir = "a";
-        this.speed = 12;
+        this.speed = 10;
     }
 
     update(){
@@ -179,15 +164,19 @@ class Pacman extends Entity {
         else if(this.dir === "w") sprite_add_fac = 6;
 
         let active_sprite;
-        if(this.timer < this.speed / 4) active_sprite = 10 + sprite_add_fac;
-        else if(this.timer >= this.speed / 4 && this.timer < this.speed / 2) active_sprite = 11 + sprite_add_fac;
-        else if(this.timer >= this.speed / 2 && this.timer < (this.speed / 4) * 3) active_sprite = 10 + sprite_add_fac;
-        else active_sprite = 18;
+        if(this.movement[0] == 0 && this.movement[1] == 0){
+            active_sprite = 10 + sprite_add_fac;
+        } else {
+            if(this.timer < this.speed / 4) active_sprite = 10 + sprite_add_fac;
+            else if(this.timer >= this.speed / 4 && this.timer < this.speed / 2) active_sprite = 11 + sprite_add_fac;
+            else if(this.timer >= this.speed / 2 && this.timer < (this.speed / 4) * 3) active_sprite = 10 + sprite_add_fac;
+            else active_sprite = 18;
+        }
         
         this.loc[0] += this.movement[0];
         this.loc[1] += this.movement[1];
         this.timer++;
 
-        this.render(active_sprite);
+        this.render(active_sprite, 15);
     }
 }
