@@ -31,6 +31,19 @@ class Ghost extends Entity {
     }
 
     pathfind() {
+        /* Portal */
+        if(this.loc[0] < 0){
+            this.loc[0] = this.renderer.width + 1;
+            this.dir = [-1, 0];
+            return;
+        }
+
+        if(this.loc[0] > this.renderer.width + 1){
+            this.loc[0] = -1;
+            this.dir = [1, 0];
+            return;
+        }
+
         /* Calculate Valid Directions */
         let dirs = [];
         let next_tile;

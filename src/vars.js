@@ -1,15 +1,3 @@
-let ghost_sprites = new Image();
-ghost_sprites.src = "./images/ghost.png";
-ghost_sprites.onload = () => ghost_sprites.image_loaded = true;
-
-let pacman_sprites = new Image();
-pacman_sprites.src = "./images/pacman.png";
-pacman_sprites.onload = () => pacman_sprites.image_loaded = true;
-
-let wall_sprites = new Image();
-wall_sprites.src = "./images/wall.png";
-wall_sprites.onload = () => wall_sprites.image_loaded = true;
-
 let tilemap = [
     [ 2,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7, 19, 18,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  7,  3],
     [ 5, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 14, 13, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,  6],

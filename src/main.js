@@ -32,6 +32,18 @@ async function main(){
     ctx.font = "12px main_font";
     ctx.fillText("LOADING ASSETS...", canvas.width / 2, canvas.height / 2);
 
+    let ghost_sprites = new Image();
+    ghost_sprites.src = "./images/ghost.png";
+    ghost_sprites.onload = () => ghost_sprites.image_loaded = true;
+
+    let pacman_sprites = new Image();
+    pacman_sprites.src = "./images/pacman.png";
+    pacman_sprites.onload = () => pacman_sprites.image_loaded = true;
+
+    let wall_sprites = new Image();
+    wall_sprites.src = "./images/wall.png";
+    wall_sprites.onload = () => wall_sprites.image_loaded = true;
+
     renderer = new Renderer(rows, cols, tilemap, wall_sprites);
     pacman = new Pacman(renderer, pacman_sprites, [13, 23]);
 
