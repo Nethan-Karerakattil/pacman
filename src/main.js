@@ -12,6 +12,7 @@ canvas.height = cols * scale;
 
 let renderer = null;
 let pacman = null;
+let pwr_pellet_timer = 0;
 
 let blinky = null;
 let pinky = null;
@@ -54,10 +55,10 @@ async function main(){
 
     /* Events */
     document.addEventListener("keyup", (e) => {
-        if(e.key === "w") pacman.player_dir = "w";
-        else if(e.key === "a") pacman.player_dir = "a";
-        else if(e.key === "s") pacman.player_dir = "s";
-        else if(e.key === "d") pacman.player_dir = "d";
+        if(e.key === "w" || e.key === "ArrowUp") pacman.player_dir = "w";
+        else if(e.key === "a" || e.key === "ArrowLeft") pacman.player_dir = "a";
+        else if(e.key === "s" || e.key === "ArrowDown") pacman.player_dir = "s";
+        else if(e.key === "d" || e.key === "ArrowRight") pacman.player_dir = "d";
     });
 
     calc_fps();
@@ -83,8 +84,31 @@ function render_loop() {
     ctx.fillStyle = "#000";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    /* Blinking of power pellets */
+    pwr_pellet_timer++;
+    if(pwr_pellet_timer > 14){
+        pwr_pellet_timer = 0;
+    }
+
+    if(pwr_pellet_timer < 7){
+        tilemap[3][1] = 34;
+        tilemap[3][26] = 34;
+        tilemap[23][1] = 34;
+        tilemap[23][26] = 34;
+    } else if(pwr_pellet_timer >= 7) {
+        tilemap[3][1] = 33;
+        tilemap[3][26] = 33;
+        tilemap[23][1] = 33;
+        tilemap[23][26] = 33;
+    }
+
+    // Blank = 34
+    // pwr pellet = 33
+
+    /* Render Board */
     renderer.render();
 
+    /* Render Ghosts and Pacman */
     pacman.update();
     blinky.update();
     pinky.update();

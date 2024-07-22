@@ -138,7 +138,7 @@ class Pacman extends Entity {
 
             /* Portal Functionality */
             if(this.loc[0] < 0){
-                this.loc[0] = this.renderer.width + 1;
+                this.loc = [this.renderer.width + 1, 14];
                 this.start_from[0] = this.renderer.width + 1;
                 this.move_to[0] = this.renderer.width;
                 
@@ -151,7 +151,7 @@ class Pacman extends Entity {
             }
 
             if(this.loc[0] > this.renderer.width + 1){
-                this.loc[0] = -1;
+                this.loc = [-1, 14];
                 this.start_from[0] = -1;
                 this.move_to[0] = 0;
 
@@ -159,7 +159,7 @@ class Pacman extends Entity {
                     (this.move_to[0] - this.start_from[0]) / this.speed,
                     (this.move_to[1] - this.start_from[1]) / this.speed
                 ];
-                
+
                 return;
             }
 
