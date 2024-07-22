@@ -11,6 +11,6 @@ To contribute code, follow these steps:
     2. Clone the fork
     3. Make your changes on a new branch
     4. Commit your changes
-    5. Open a pull request against the dev branch
+    5. Open a pull request
 
 To get a working development environment on your local machine, you must setup a server and access the main HTML file through the server. An easy way to accomplish this is by using the live server extension on VSCode.
