@@ -1,5 +1,5 @@
 # Pacman
-This game is still under development and is not functional yet. This clone of pacman is a static website built with javascript along with the HTML canvas API.
+This game is still under development and is not functional yet. This clone of pacman is a game built with javascript along with the HTML canvas API.
 
 ## Contributing
-We are looking for contributors! If you find issues with the game or have any ideas, feel free to reach out. Before making a pull request, read contributing.md. Keep in mind that we want this clone to be as close the original arcade version of pacman as possible.
+If you want to suggest a feature or write code for this repository, read CONTRIBUTING.md for more information. Keep in mind that we want this repository to be as close to the original arcade version of pacman as possible. This what the final game must be as close as possible to -> [Online Emulator ROM for Original Arcade Pacman](https://online.oldgames.sk/play/arcade/pac-man/9954)

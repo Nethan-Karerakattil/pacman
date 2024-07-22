@@ -15,9 +15,9 @@ class Entity {
             this.spritesheet,
             active_sprite * sprite_size, 0,
             sprite_size, sprite_size,
-            this.loc[0] * 16 - (16 / 4),
-            this.loc[1] * 16 - (16 / 4),
-            24, 24
+            this.loc[0] * 16 - 5,
+            this.loc[1] * 16 - 5,
+            26, 26
         );
     }
 }
@@ -31,16 +31,14 @@ class Ghost extends Entity {
     }
 
     pathfind() {
-        /* Portal */
+        /* Portal Functionality */
         if(this.loc[0] < 0){
             this.loc[0] = this.renderer.width + 1;
-            this.dir = [-1, 0];
             return;
         }
 
         if(this.loc[0] > this.renderer.width + 1){
             this.loc[0] = -1;
-            this.dir = [1, 0];
             return;
         }
 
@@ -82,7 +80,7 @@ class Ghost extends Entity {
             (prev_loc[0] !== this.loc[0] || prev_loc[1] !== this.loc[1] - 1)
         ) dirs.push([0, -1]);
 
-        /* Choose Random Direction */
+        /* Pathfind */
         let rng = Math.floor(Math.random() * dirs.length);
 
         let move_to = [
@@ -117,7 +115,7 @@ class Ghost extends Entity {
         this.loc[1] += this.movement[1];
         this.timer++;
 
-        this.render(active_sprite, 16);
+        this.render(active_sprite, 28);
     }
 }
 
@@ -138,21 +136,48 @@ class Pacman extends Entity {
             this.start_from = structuredClone(this.loc);
             this.timer = 0;
 
+            /* Portal Functionality */
+            if(this.loc[0] < 0){
+                this.loc[0] = this.renderer.width + 1;
+                this.start_from[0] = this.renderer.width + 1;
+                this.move_to[0] = this.renderer.width;
+                
+                this.movement = [
+                    (this.move_to[0] - this.start_from[0]) / this.speed,
+                    (this.move_to[1] - this.start_from[1]) / this.speed
+                ];
+
+                return;
+            }
+
+            if(this.loc[0] > this.renderer.width + 1){
+                this.loc[0] = -1;
+                this.start_from[0] = -1;
+                this.move_to[0] = 0;
+
+                this.movement = [
+                    (this.move_to[0] - this.start_from[0]) / this.speed,
+                    (this.move_to[1] - this.start_from[1]) / this.speed
+                ];
+                
+                return;
+            }
+
             /* Calculate Valid Directions */
             let valid_dirs = [];
             let next_tile;
     
             next_tile = this.renderer.tilemap[this.loc[1]][this.loc[0] + 1];
-            if(next_tile === 32 || next_tile === 33 || next_tile === 34) valid_dirs.push("d");
+            if(next_tile === 32 || next_tile === 33 || next_tile === 34 || !next_tile) valid_dirs.push("d");
     
             next_tile = this.renderer.tilemap[this.loc[1] + 1][this.loc[0]];
-            if(next_tile === 32 || next_tile === 33 || next_tile === 34) valid_dirs.push("s");
+            if(next_tile === 32 || next_tile === 33 || next_tile === 34 || !next_tile) valid_dirs.push("s");
     
             next_tile = this.renderer.tilemap[this.loc[1]][this.loc[0] - 1];
-            if(next_tile === 32 || next_tile === 33 || next_tile === 34) valid_dirs.push("a");
+            if(next_tile === 32 || next_tile === 33 || next_tile === 34 || !next_tile) valid_dirs.push("a");
     
             next_tile = this.renderer.tilemap[this.loc[1] - 1][this.loc[0]];
-            if(next_tile === 32 || next_tile === 33 || next_tile === 34) valid_dirs.push("w");
+            if(next_tile === 32 || next_tile === 33 || next_tile === 34 || !next_tile) valid_dirs.push("w");
 
             /* Change Pacman Direction */
             if(valid_dirs.includes(this.player_dir)) this.dir = structuredClone(this.player_dir);
@@ -190,6 +215,6 @@ class Pacman extends Entity {
         this.loc[1] += this.movement[1];
         this.timer++;
 
-        this.render(active_sprite, 15);
+        this.render(active_sprite, 26);
     }
 }

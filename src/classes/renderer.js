@@ -14,7 +14,7 @@ class Renderer {
             for(let x = 0; x < this.tilemap[y].length; x++){
                 ctx.drawImage(
                     this.spritesheet,
-                    this.tilemap[y][x] * 8, 0, 8, 8,
+                    this.tilemap[y][x] * 16, 0, 16, 16,
                     x * cell_width, y * cell_height,
                     cell_width, cell_height
                 );
