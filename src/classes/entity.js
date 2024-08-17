@@ -7,17 +7,19 @@ class Entity {
         this.speed = 13;
     }
 
+    /**
+     * Renders a ghost or pacman to the canvas
+     * @param {number} active_sprite which sprite to draw
+     * @param {number} sprite_size size of sprites
+     */
     render(active_sprite, sprite_size){
-        let ghost_scale = 1.5;
-        let size = sprite_size * ghost_scale;
-
         ctx.drawImage(
             this.spritesheet,
             active_sprite * sprite_size, 0,
             sprite_size, sprite_size,
             this.loc[0] * 16 - 5,
             this.loc[1] * 16 - 5,
-            26, 26
+            sprite_size, sprite_size
         );
     }
 }
@@ -30,18 +32,10 @@ class Ghost extends Entity {
         this.speed = 9;
     }
 
+    /**
+     * Pathfinding algorithm for ghosts
+     */
     pathfind() {
-        /* Portal Functionality */
-        if(this.loc[0] < 0){
-            this.loc[0] = this.renderer.width + 1;
-            return;
-        }
-
-        if(this.loc[0] > this.renderer.width + 1){
-            this.loc[0] = -1;
-            return;
-        }
-
         /* Calculate Valid Directions */
         let dirs = [];
         let next_tile;
@@ -94,10 +88,24 @@ class Ghost extends Entity {
         ];
     }
 
+    /**
+     * Timed update function for ghosts
+     */
     update(){
         if(this.timer === this.speed || !this.movement){
             this.loc = structuredClone(this.move_to ? this.move_to : this.loc);
             this.timer = 0;
+
+            /* Portal Functionality */
+            if(this.loc[0] < 0){
+                this.loc[0] = this.renderer.width + 1;
+                return;
+            }
+
+            if(this.loc[0] > this.renderer.width + 1){
+                this.loc[0] = -1;
+                return;
+            }
 
             this.pathfind();
         }
@@ -127,6 +135,9 @@ class Pacman extends Entity {
         this.speed = 10;
     }
 
+    /**
+     * Timed update function for pacman
+     */
     update(){
         if(this.timer === this.speed || !this.movement){
             this.loc[0] = Math.round(this.loc[0]);

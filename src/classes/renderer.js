@@ -6,6 +6,9 @@ class Renderer {
         this.spritesheet = spritesheet;
     }
 
+    /**
+     * Renders background images to canvas
+     */
     render(){
         let cell_width = canvas.width / this.width;
         let cell_height = canvas.height / this.height;

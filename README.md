@@ -1,4 +1,6 @@
 # Pacman
+[Click here](https://pacman-q1go.onrender.com/) for the live version of this repository!
+
 This game is still under development and is not functional yet. This clone of pacman is a game built with javascript along with the HTML canvas API.
 
 ## Contributing
