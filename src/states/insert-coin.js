@@ -18,23 +18,23 @@ function render_insert_coin() {
     insert_coin_timer++;
 
     if (insert_coin_timer === 1) menu_animation(0);
-    if (insert_coin_timer > 50) render_image(ghost_sprites, 4, [3, 4], 28);
+    if (insert_coin_timer > 50) render_image(ghost_sprites, 4, [3, 4], 28, 0);
     if (insert_coin_timer === 100) menu_animation(1);
     if (insert_coin_timer === 125) menu_animation(2);
-    if (insert_coin_timer > 175) render_image(ghost_sprites, 12, [3, 7], 28);
+    if (insert_coin_timer > 175) render_image(ghost_sprites, 12, [3, 7], 28, 0);
     if (insert_coin_timer === 225) menu_animation(3);
     if (insert_coin_timer === 250) menu_animation(4);
-    if (insert_coin_timer > 325) render_image(ghost_sprites, 20, [3, 10], 28);
+    if (insert_coin_timer > 325) render_image(ghost_sprites, 20, [3, 10], 28, 0);
     if (insert_coin_timer === 375) menu_animation(5);
     if (insert_coin_timer === 400) menu_animation(6);
-    if (insert_coin_timer > 450) render_image(ghost_sprites, 28, [3, 13], 28);
+    if (insert_coin_timer > 450) render_image(ghost_sprites, 28, [3, 13], 28, 0);
     if (insert_coin_timer === 500) menu_animation(7);
     if (insert_coin_timer === 525) menu_animation(8);
     if (insert_coin_timer === 600) menu_animation(9);
 
     if (insert_coin_timer > 600) {
-        render_image(wall_sprites, 32, [9, 21.7], 16);
-        if (render_pwr_pellet) render_image(wall_sprites, 33, [9, 23.7], 16);
+        render_image(wall_sprites, 32, [9, 21.7], 16, 0);
+        if (render_pwr_pellet) render_image(wall_sprites, 33, [9, 23.7], 16, 0);
 
         ctx.drawImage(
             char_sprites,
@@ -54,7 +54,7 @@ function render_insert_coin() {
     }
 
     if (insert_coin_timer > 650) {
-        if (render_pwr_pellet && insert_coin_timer < 960) render_image(wall_sprites, 33, [3, 17], 16);
+        if (render_pwr_pellet && insert_coin_timer < 960) render_image(wall_sprites, 33, [3, 17], 16, 0);
 
         // TODO: Fix color of namco sprite
         ctx.drawImage(
@@ -76,23 +76,23 @@ function render_insert_coin() {
             if (anim_timer > 12) anim_timer = 0;
 
             if (anim_timer <= 4) {
-                render_image(pacman_sprites, 12, [pacman_anim_loc, 17], 26);
+                render_image(pacman_sprites, 12, [pacman_anim_loc, 17], 26, 0);
             } else if (anim_timer > 4 && anim_timer <= 8) {
-                render_image(pacman_sprites, 13, [pacman_anim_loc, 17], 26);
+                render_image(pacman_sprites, 13, [pacman_anim_loc, 17], 26, 0);
             } else {
-                render_image(pacman_sprites, 18, [pacman_anim_loc, 17], 26);
+                render_image(pacman_sprites, 18, [pacman_anim_loc, 17], 26, 0);
             }
 
             if (anim_timer <= 6) {
-                render_image(ghost_sprites, 2, [ghost_anim_loc[0], 17], 28);
-                render_image(ghost_sprites, 10, [ghost_anim_loc[1], 17], 28);
-                render_image(ghost_sprites, 18, [ghost_anim_loc[2], 17], 28);
-                render_image(ghost_sprites, 26, [ghost_anim_loc[3], 17], 28);
+                render_image(ghost_sprites, 2, [ghost_anim_loc[0], 17], 28, 0);
+                render_image(ghost_sprites, 10, [ghost_anim_loc[1], 17], 28, 0);
+                render_image(ghost_sprites, 18, [ghost_anim_loc[2], 17], 28, 0);
+                render_image(ghost_sprites, 26, [ghost_anim_loc[3], 17], 28, 0);
             } else {
-                render_image(ghost_sprites, 3, [ghost_anim_loc[0], 17], 28);
-                render_image(ghost_sprites, 11, [ghost_anim_loc[1], 17], 28);
-                render_image(ghost_sprites, 19, [ghost_anim_loc[2], 17], 28);
-                render_image(ghost_sprites, 27, [ghost_anim_loc[3], 17], 28);
+                render_image(ghost_sprites, 3, [ghost_anim_loc[0], 17], 28, 0);
+                render_image(ghost_sprites, 11, [ghost_anim_loc[1], 17], 28, 0);
+                render_image(ghost_sprites, 19, [ghost_anim_loc[2], 17], 28, 0);
+                render_image(ghost_sprites, 27, [ghost_anim_loc[3], 17], 28, 0);
             }
 
             pacman_anim_loc -= 0.1;
@@ -105,7 +105,7 @@ function render_insert_coin() {
                 anim_state = "scatter";
             }
 
-            /* Running away animation */
+        /* Running away animation */
         } else if (anim_state === "scatter") {
             if (insert_coin_timer == 980) {
                 temp_pause(1000, () => anim_render_pacman = true);
@@ -135,24 +135,24 @@ function render_insert_coin() {
                 anim_timer++;
                 if (anim_timer > 12) anim_timer = 0;
                 if (anim_timer <= 4) {
-                    render_image(pacman_sprites, 14, [pacman_anim_loc, 17], 26);
+                    render_image(pacman_sprites, 14, [pacman_anim_loc, 17], 26, 0);
                 } else if (anim_timer > 4 && anim_timer <= 8) {
-                    render_image(pacman_sprites, 15, [pacman_anim_loc, 17], 26);
+                    render_image(pacman_sprites, 15, [pacman_anim_loc, 17], 26, 0);
                 } else {
-                    render_image(pacman_sprites, 18, [pacman_anim_loc, 17], 26);
+                    render_image(pacman_sprites, 18, [pacman_anim_loc, 17], 26, 0);
                 }
             }
 
             if (anim_timer <= 6) {
-                if (ghost_anim_loc[0]) render_image(ghost_sprites, 32, [ghost_anim_loc[0], 17], 28);
-                if (ghost_anim_loc[1]) render_image(ghost_sprites, 32, [ghost_anim_loc[1], 17], 28);
-                if (ghost_anim_loc[2]) render_image(ghost_sprites, 32, [ghost_anim_loc[2], 17], 28);
-                if (ghost_anim_loc[3]) render_image(ghost_sprites, 32, [ghost_anim_loc[3], 17], 28);
+                if (ghost_anim_loc[0]) render_image(ghost_sprites, 32, [ghost_anim_loc[0], 17], 28, 0);
+                if (ghost_anim_loc[1]) render_image(ghost_sprites, 32, [ghost_anim_loc[1], 17], 28, 0);
+                if (ghost_anim_loc[2]) render_image(ghost_sprites, 32, [ghost_anim_loc[2], 17], 28, 0);
+                if (ghost_anim_loc[3]) render_image(ghost_sprites, 32, [ghost_anim_loc[3], 17], 28, 0);
             } else {
-                if (ghost_anim_loc[0]) render_image(ghost_sprites, 33, [ghost_anim_loc[0], 17], 28);
-                if (ghost_anim_loc[1]) render_image(ghost_sprites, 33, [ghost_anim_loc[1], 17], 28);
-                if (ghost_anim_loc[2]) render_image(ghost_sprites, 33, [ghost_anim_loc[2], 17], 28);
-                if (ghost_anim_loc[3]) render_image(ghost_sprites, 33, [ghost_anim_loc[3], 17], 28);
+                if (ghost_anim_loc[0]) render_image(ghost_sprites, 33, [ghost_anim_loc[0], 17], 28, 0);
+                if (ghost_anim_loc[1]) render_image(ghost_sprites, 33, [ghost_anim_loc[1], 17], 28, 0);
+                if (ghost_anim_loc[2]) render_image(ghost_sprites, 33, [ghost_anim_loc[2], 17], 28, 0);
+                if (ghost_anim_loc[3]) render_image(ghost_sprites, 33, [ghost_anim_loc[3], 17], 28, 0);
             }
 
             pacman_anim_loc += 0.1;
@@ -173,60 +173,6 @@ function render_insert_coin() {
     }
 
     render_text(char_map, char_sprites);
-}
-
-/**
- * Pauses the game for the given time
- * @param {number} time ms to pause the game for
- * @param {function} callback function to do after pause is over
- */
-function temp_pause(time, callback) {
-    game_pause = true;
-    setTimeout(() => {
-        callback();
-        game_pause = false;
-    }, time);
-}
-
-/**
- * Renders a sprite from a sheet.
- * @param {image} spritesheet image element
- * @param {number} sprite the sprite to display
- * @param {array} loc x, y location of sprite
- * @param {number} sprite_size width and height of sprite
- */
-function render_image(spritesheet, sprite, loc, sprite_size) {
-    ctx.drawImage(
-        spritesheet,
-        sprite * sprite_size, 0,
-        sprite_size, sprite_size,
-        loc[0] * 16,
-        loc[1] * 16,
-        sprite_size, sprite_size
-    );
-}
-
-/**
- * Renders text from the char_map variable
- * @param {array} char_map char_map variable
- * @param {image} spritesheet text spritesheet image 
- */
-function render_text(char_map, spritesheet){
-    const SPRITE_SIZE = 16;
-    const SPRITE_SCREEN_SIZE = 16;
-
-    for(let i = 0; i < char_map.length; i++){
-        ctx.drawImage(
-            spritesheet,
-
-            char_map[i][1] * SPRITE_SIZE, 0,
-            SPRITE_SIZE, SPRITE_SIZE,
-
-            char_map[i][0][0] * SPRITE_SCREEN_SIZE - 5,
-            char_map[i][0][1] * SPRITE_SCREEN_SIZE - 5,
-            SPRITE_SCREEN_SIZE, SPRITE_SCREEN_SIZE
-        );
-    }
 }
 
 /**

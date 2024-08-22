@@ -5,17 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pacman</title>
 
-    <script src="./src/classes/text.js" defer></script>
+    <!-- <script src="./src/classes/text.js" defer></script>
     <script src="./src/classes/entity.js" defer></script>
-    <script src="./src/classes/renderer.js" defer></script>
+    <script src="./src/classes/renderer.js" defer></script> -->
+    <script src="./src/util.js" defer></script>
     <script src="./src/states/insert-coin.js" defer></script>
     <script src="./src/states/game.js" defer></script>
     <script src="./src/vars.js" defer></script>
     <script src="./src/main.js" defer></script>
 </head>
 <body>
-    <canvas id="c"></canvas>
-    <a href="https://github.com/Nethan-Karerakattil/pacman">View in Github</a>
+    <div class="canvas-wrapper">
+        <canvas id="c"></canvas>
+        <a href="https://github.com/Nethan-Karerakattil/pacman">View in Github</a>
+    </div>
+
+    <table>
+        <tr>
+            <th>Control</th>
+            <th>Button</th>
+        </tr>
+        <tr>
+            <td>Insert Coin</td>
+            <td>Enter</td>
+        </tr>
+        <tr>
+            <td>Up</td>
+            <td>W</td>
+        </tr>
+        <tr>
+            <td>Left</td>
+            <td>A</td>
+        </tr>
+        <tr>
+            <td>Down</td>
+            <td>S</td>
+        </tr>
+        <tr>
+            <td>Right</td>
+            <td>D</td>
+        </tr>
+    </table>
 
     <style>
         body {
@@ -24,9 +54,15 @@
             justify-content: center;
             height: 100vh;
             overflow: hidden;
-            flex-direction: column;
             font-family: 'Courier New', Courier, monospace;
             background-color: #000;
+        }
+
+        .canvas-wrapper {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            margin-right: 100px;
         }
 
         #c {
@@ -37,6 +73,20 @@
 
         a {
             font-size: 1.5rem;
+        }
+
+        table {
+            color: #fff;
+            width: 250px;
+            border: #fff solid 1px;
+        }
+
+        th {
+            border: #fff solid 1px;
+        }
+
+        td {
+            border: #fff solid 1px;
         }
     </style>
 </body>

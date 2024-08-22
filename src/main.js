@@ -2,24 +2,20 @@ const canvas = document.querySelector("#c");
 const ctx = canvas.getContext("2d");
 
 /* Globals */
-let rows = 28;
-let cols = 31;
-let scale = 16;
+const ROWS = 28;
+const COLS = 31;
+const SCALE = 16;
 let fps = 0;
 
-canvas.width = rows * scale;
-canvas.height = cols * scale;
+canvas.width = ROWS * SCALE;
+canvas.height = COLS * SCALE;
 
 let renderer = null;
 let text = null;
 let pacman = null;
 let state = "insert-coin";
 let game_pause = false;
-
-let blinky = null;
-let pinky = null;
-let inky = null;
-let clyde = null;
+let player_dir = "a";
 
 let char_sprites;
 let ghost_sprites;
@@ -57,23 +53,36 @@ async function main(){
     wall_sprites.src = "./images/wall.png";
     wall_sprites.onload = () => wall_sprites.image_loaded = true;
 
-    renderer = new Renderer(rows, cols, tilemap, wall_sprites);
-    text = new Text(char_sprites, []);
-    pacman = new Pacman(renderer, pacman_sprites, [13, 23]);
-
-    blinky = new Ghost("blinky", renderer, pacman, ghost_sprites, [1, 1]);
-    pinky = new Ghost("pinky", renderer, pacman, ghost_sprites, [26, 29]);
-    inky = new Ghost("inky", renderer, pacman, ghost_sprites, [1, 29]);
-    clyde = new Ghost("clyde", renderer, pacman, ghost_sprites, [26, 1]);
-
     /* Events */
     document.addEventListener("keyup", (e) => {
-        if(state === "game" && (e.key === "w" || e.key === "ArrowUp")) return pacman.player_dir = "w";
-        else if(state === "game" && (e.key === "a" || e.key === "ArrowLeft")) return pacman.player_dir = "a";
-        else if(state === "game" && (e.key === "s" || e.key === "ArrowDown")) return pacman.player_dir = "s";
-        else if(state === "game" && (e.key === "d" || e.key === "ArrowRight")) return pacman.player_dir = "d";
-        
-        if(state === "insert-coin" && e.key === "Enter") return state = "game";
+        if(state === "insert-coin" && e.key === "Enter"){
+            state = "game";
+            return;
+        }
+
+        if(state === "game"){
+            if (e.key === "w" || e.key === "ArrowUp"){
+                player_dir = "w";
+                return;
+            }
+            
+            if (e.key === "a" || e.key === "ArrowLeft"){
+                player_dir = "s";
+                return;
+            }
+            
+            if (e.key === "s" || e.key === "ArrowDown"){
+                player_dir = "s";
+                return;
+            }
+            
+            if (e.key === "d" || e.key === "ArrowRight"){
+                player_dir = "d";
+                return;
+            }
+
+            return;
+        }
     });
 
     // TODO: Find more optimal way to load sprites
