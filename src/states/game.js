@@ -1,15 +1,15 @@
 const GHOST_SPEED = 9;
 const PACMAN_SPEED = 10;
+const PACMAN_FLASH_SPEED = 4;
+const PWR_PELLET_FLASH_SPEED = 7;
 
 class BaseGhost {
     constructor(location) {
         this.loc = location;
         this.prev_loc = [];
-        this.next_loc = [];
         this.movement = [0, 0];
         this.speed = GHOST_SPEED;
         this.sprite_toggle = false;
-        this.timer = 0;
     }
 
     /**
@@ -20,7 +20,7 @@ class BaseGhost {
      *  - Code for redrawing ghost
      */
     update() {
-        if (this.timer % this.speed == 0 || !this.movement) {
+        if (game_timer % this.speed == 0) {
             this.loc[0] = Math.round(this.loc[0]);
             this.loc[1] = Math.round(this.loc[1]);
 
@@ -34,13 +34,13 @@ class BaseGhost {
 
             let valid_dirs = [];
             for (let i = 0; i < all_dirs.length; i++) {
-                if(all_dirs[i][0] < 0 || all_dirs[i][1] < 0) continue;
+                if (all_dirs[i][0] < 0 || all_dirs[i][1] < 0) continue;
 
                 let next_tile = tilemap[all_dirs[i][1]][all_dirs[i][0]];
                 let is_path = next_tile === 32 || next_tile === 33 || next_tile === 34;
                 let not_prev_loc = JSON.stringify(this.prev_loc) !== JSON.stringify(all_dirs[i]);
-                
-                if (is_path && not_prev_loc){
+
+                if (is_path && not_prev_loc) {
                     valid_dirs.push(all_dirs[i]);
                 }
             }
@@ -63,17 +63,14 @@ class BaseGhost {
 
             /* Calculate movement vector */
             this.prev_loc = structuredClone(this.loc);
-            this.next_loc = structuredClone(shortest_dir);
-
             this.movement = [
-                (this.next_loc[0] - this.prev_loc[0]) / this.speed,
-                (this.next_loc[1] - this.prev_loc[1]) / this.speed,
+                (shortest_dir[0] - this.prev_loc[0]) / this.speed,
+                (shortest_dir[1] - this.prev_loc[1]) / this.speed,
             ];
         }
 
         /* Draw */
-        this.timer++;
-        if (this.timer % 7 == 0) this.sprite_toggle = !this.sprite_toggle;
+        if (game_timer % 7 == 0) this.sprite_toggle = !this.sprite_toggle;
 
         this.loc[0] += this.movement[0];
         this.loc[1] += this.movement[1];
@@ -174,7 +171,11 @@ class Clyde extends BaseGhost {
 }
 
 let game_timer = 0;
-let toggle_pwr_pellet = true;
+let pwr_pellet_flash = true;
+let pacman_flash = true;
+let pacman_loc = [13, 23];
+let pacman_movement = [0, 0];
+let pacman_dir = [0, 0];
 
 let blinky = new Blinky([1, 1]);
 let pinky = new Pinky([26, 29]);
@@ -186,10 +187,9 @@ let clyde = new Clyde([26, 1]);
  */
 function render_game() {
     /* Blinking of power pellets */
-    game_timer++;
-    if(game_timer % 7 == 0) toggle_pwr_pellet = !toggle_pwr_pellet;
+    if (game_timer % PWR_PELLET_FLASH_SPEED == 0) pwr_pellet_flash = !pwr_pellet_flash;
 
-    if (toggle_pwr_pellet) {
+    if (pwr_pellet_flash) {
         tilemap[3][1] = 33;
         tilemap[3][26] = 33;
         tilemap[23][1] = 33;
@@ -205,10 +205,59 @@ function render_game() {
     render_bkg(tilemap, wall_sprites);
 
     /* Update and render ghosts */
+    game_timer++;
     blinky.update();
     pinky.update();
     inky.update();
     clyde.update();
 
     /* Pacman */
+    update_pacman();
+}
+
+/**
+ * Updates & renders pacman
+ */
+function update_pacman() {
+    /* Update movement vector */
+    if (game_timer % PACMAN_SPEED == 0) {
+        pacman_loc[0] = Math.round(pacman_loc[0]);
+        pacman_loc[1] = Math.round(pacman_loc[1]);
+
+        /* Validate user input */
+        let player_next_loc = [pacman_loc[0] + player_dir[0], pacman_loc[1] + player_dir[1]];
+        let player_next_tile = tilemap[player_next_loc[1]][player_next_loc[0]];
+
+        if (player_next_tile === 32 || player_next_tile === 33 || player_next_tile === 34) {
+            pacman_dir = structuredClone(player_dir);
+        }
+
+        /* Calculate movement vector */
+        let pacman_next_loc = [pacman_loc[0] + pacman_dir[0], pacman_loc[1] + pacman_dir[1]];
+        let pacman_next_tile = tilemap[pacman_next_loc[1]][pacman_next_loc[0]];
+
+        if (pacman_next_tile === 32 || pacman_next_tile === 33 || pacman_next_tile === 34) {
+            pacman_movement = [
+                (pacman_next_loc[0] - pacman_loc[0]) / PACMAN_SPEED,
+                (pacman_next_loc[1] - pacman_loc[1]) / PACMAN_SPEED
+            ];
+        } else {
+            pacman_movement = [0, 0];
+        }
+    }
+
+    /* Update location & draw */
+    pacman_loc[0] += pacman_movement[0];
+    pacman_loc[1] += pacman_movement[1];
+
+    let sprite_id = 10;
+    if (pacman_dir[0] ==  0 && pacman_dir[1] == -1) sprite_id += 6;
+    if (pacman_dir[0] ==  1 && pacman_dir[1] ==  0) sprite_id += 4;
+    if (pacman_dir[0] ==  0 && pacman_dir[1] ==  1) sprite_id += 0;
+    if (pacman_dir[0] == -1 && pacman_dir[1] ==  0) sprite_id += 2;
+
+    if (game_timer % PACMAN_FLASH_SPEED == 0) pacman_flash = !pacman_flash;
+    if (pacman_flash && !(pacman_movement[0] == 0 && pacman_movement[1] == 0)) sprite_id++;
+
+    render_image(pacman_sprites, sprite_id, pacman_loc, 26, 5);
 }

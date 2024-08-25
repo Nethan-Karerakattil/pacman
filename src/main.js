@@ -15,7 +15,7 @@ let text = null;
 let pacman = null;
 let state = "insert-coin";
 let game_pause = false;
-let player_dir = "a";
+let player_dir = [0, 0];
 
 let char_sprites;
 let ghost_sprites;
@@ -23,17 +23,12 @@ let pacman_sprites;
 let wall_sprites;
 
 main();
-async function main(){
+async function main() {
     ctx.fillStyle = "#000";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    let font = new FontFace("main_font", "url(fonts/press-start-2p.ttf)");
-    await font.load();
-    document.fonts.add(font);
-
     ctx.fillStyle = "#fff";
     ctx.textAlign = "center";
-    ctx.font = "12px main_font";
     ctx.fillText("LOADING ASSETS...", canvas.width / 2, canvas.height / 2);
     console.log("loading assets");
 
@@ -55,29 +50,29 @@ async function main(){
 
     /* Events */
     document.addEventListener("keyup", (e) => {
-        if(state === "insert-coin" && e.key === "Enter"){
+        if (state === "insert-coin" && e.key === "Enter") {
             state = "game";
             return;
         }
 
-        if(state === "game"){
-            if (e.key === "w" || e.key === "ArrowUp"){
-                player_dir = "w";
+        if (state === "game") {
+            if (e.key === "w" || e.key === "ArrowUp") {
+                player_dir = [0, -1];
                 return;
             }
-            
-            if (e.key === "a" || e.key === "ArrowLeft"){
-                player_dir = "s";
+
+            if (e.key === "a" || e.key === "ArrowLeft") {
+                player_dir = [-1, 0];
                 return;
             }
-            
-            if (e.key === "s" || e.key === "ArrowDown"){
-                player_dir = "s";
+
+            if (e.key === "s" || e.key === "ArrowDown") {
+                player_dir = [0, 1];
                 return;
             }
-            
-            if (e.key === "d" || e.key === "ArrowRight"){
-                player_dir = "d";
+
+            if (e.key === "d" || e.key === "ArrowRight") {
+                player_dir = [1, 0];
                 return;
             }
 
@@ -87,13 +82,13 @@ async function main(){
 
     // TODO: Find more optimal way to load sprites
     wait_loaded();
-    function wait_loaded(){
-        if(
+    function wait_loaded() {
+        if (
             char_sprites.image_loaded &&
             ghost_sprites.image_loaded &&
             pacman_sprites.image_loaded &&
             wall_sprites.image_loaded
-        ){
+        ) {
             calc_fps();
             loop();
             console.log("loaded all assets");
@@ -113,10 +108,10 @@ async function main(){
     }
 
     // TODO: Find more optimal way to limit fps to 60
-    function loop(){
+    function loop() {
         setTimeout(() => {
             loop();
-            if(!game_pause) render_loop();
+            if (!game_pause) render_loop();
             fps++;
         }, 1000 / 60);
     }
@@ -126,7 +121,7 @@ function render_loop() {
     ctx.fillStyle = "#000";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    switch(state){
+    switch (state) {
         case "loading":
             break;
 

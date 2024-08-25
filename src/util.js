@@ -34,8 +34,8 @@ function render_image(spritesheet, sprite, loc, sprite_size, offset) {
  * @param {array} char_map char_map variable
  * @param {image} spritesheet text spritesheet image
  */
-function render_text(char_map, spritesheet){
-    for(let i = 0; i < char_map.length; i++){
+function render_text(char_map, spritesheet) {
+    for (let i = 0; i < char_map.length; i++) {
         render_image(spritesheet, char_map[i][1], char_map[i][0], 16, 5);
     }
 }
@@ -45,14 +45,14 @@ function render_text(char_map, spritesheet){
  * @param {array} tilemap variable that contains all data regarding walls and pellets
  * @param {image} spritesheet spritesheet for all walls and pelletes
  */
-function render_bkg(tilemap, spritesheet){
+function render_bkg(tilemap, spritesheet) {
     const SPRITE_WIDTH = 16;
     const SPRITE_HEIGHT = 16;
     const SCREEN_CELL_WIDTH = 16;
     const SCREEN_CELL_HEIGHT = 16;
 
-    for(let y = 0; y < tilemap.length; y++){
-        for(let x = 0; x < tilemap[y].length; x++){
+    for (let y = 0; y < tilemap.length; y++) {
+        for (let x = 0; x < tilemap[y].length; x++) {
             ctx.drawImage(
                 spritesheet,
                 tilemap[y][x] * SPRITE_WIDTH, 0,
