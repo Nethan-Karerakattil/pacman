@@ -2,6 +2,13 @@ const GHOST_SPEED = 9;
 const PACMAN_SPEED = 10;
 const PACMAN_FLASH_SPEED = 4;
 const PWR_PELLET_FLASH_SPEED = 7;
+const SCATTER_TIME = 7;
+const CHASE_TIME = 20;
+
+const BLINKY_SCATTER_LOC = [28, -2];
+const PINKY_SCATTER_LOC = [0, -2];
+const INKY_SCATTER_LOC = [28, 33];
+const CLYDE_SCATTER_LOC = [0, 33];
 
 class BaseGhost {
     constructor(location) {
@@ -10,6 +17,7 @@ class BaseGhost {
         this.movement = [0, 0];
         this.speed = GHOST_SPEED;
         this.sprite_toggle = false;
+        this.state = "chase";
     }
 
     /**
@@ -69,6 +77,10 @@ class BaseGhost {
             ];
         }
 
+        /* Change state */
+        if (this.state === "chase" && game_timer % CHASE_TIME == 0) this.state = "scatter";
+        if (this.state === "scatter" && game_timer % SCATTER_TIME == 0) this.state = "chase";
+
         /* Draw */
         if (game_timer % 7 == 0) this.sprite_toggle = !this.sprite_toggle;
 
@@ -98,7 +110,13 @@ class Blinky extends BaseGhost {
      * @returns x, y target location
      */
     find_target() {
-        return [28, -2];
+        switch(this.state){
+            case "chase":
+                return pacman_loc;
+
+            case "scatter":
+                return BLINKY_SCATTER_LOC;
+        }
     }
 }
 
@@ -123,7 +141,18 @@ class Pinky extends BaseGhost {
      * @returns x, y target location
      */
     find_target() {
-        return [0, -2];
+        switch(this.state){
+            case "chase":
+                if (pacman_dir[0] ==  0 && pacman_dir[1] == -1) return [pacman_loc[0] - 4, pacman_loc[1] - 4];
+                if (pacman_dir[0] ==  1 && pacman_dir[1] ==  0) return [pacman_loc[0] + 4, pacman_loc[1] + 0];
+                if (pacman_dir[0] ==  0 && pacman_dir[1] ==  1) return [pacman_loc[0] + 0, pacman_loc[1] + 4];
+                if (pacman_dir[0] == -1 && pacman_dir[1] ==  0) return [pacman_loc[0] - 4, pacman_loc[1] + 0];
+        
+                return pacman_loc;
+
+            case "scatter":
+                return PINKY_SCATTER_LOC;
+        }
     }
 }
 
@@ -136,13 +165,23 @@ class Inky extends BaseGhost {
     /**
      * Returns the target tile for inky
      * 
-     * Go read about it yourself
+     * Difficult to explain. Read the article below and scroll to the
+     * "The Blue Ghost" section.
      * https://gameinternals.com/understanding-pac-man-ghost-behavior
      * 
      * @returns x, y target location
      */
     find_target() {
-        return [28, 33];
+        switch(this.state){
+            case "chase":
+                return [
+                    blinky.loc[0] + (2 * ((pacman_loc[0] + 2) - blinky.loc[0])),
+                    blinky.loc[1] + (2 * ((pacman_loc[1] + 2) - blinky.loc[1])),
+                ];
+
+            case "scatter":
+                return INKY_SCATTER_LOC;
+        }
     }
 }
 
@@ -155,7 +194,7 @@ class Clyde extends BaseGhost {
     /**
      * Returns the target tile for clyde
      * 
-     * When blinky is in his chase state and he is
+     * When clyde is in his chase state and he is
      * farther than 8 tiles from pacman, his target
      * tile is exactly the same as blinky. If he is
      * 8 tiles or closer, his target tile is the
@@ -166,7 +205,17 @@ class Clyde extends BaseGhost {
      * @returns x, y, target location
      */
     find_target() {
-        return [0, 33];
+        switch(this.state){
+            case "chase":
+                if(
+                    (Math.abs(this.loc[0] - pacman_loc[0]) > 8) ||
+                    (Math.abs(this.loc[1] - pacman_loc[1]) > 8)
+                ) return pacman_loc;
+                return CLYDE_SCATTER_LOC;
+
+            case "scatter":
+                return CLYDE_SCATTER_LOC;
+        }
     }
 }
 
@@ -174,8 +223,8 @@ let game_timer = 0;
 let pwr_pellet_flash = true;
 let pacman_flash = true;
 let pacman_loc = [13, 23];
-let pacman_movement = [0, 0];
 let pacman_dir = [0, 0];
+let pacman_movement = [0, 0];
 
 let blinky = new Blinky([1, 1]);
 let pinky = new Pinky([26, 29]);
